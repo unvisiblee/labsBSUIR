@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 //  6. Из строки, состоящей из букв, цифр, запятых, точек, знаков + и – , выделить подстроку, которая соответствует записи целого числа.
@@ -8,8 +9,7 @@ int main() {
 
     string s1, number;
     cout << "Enter the string: ";
-    cin >> s1;
-
+    getline(cin, s1);
     for(int i = 0; i < s1.length(); i++) { // Находим первое число в строке и проверяем, не стоит ли перед ним минус, если стоит - добавляем минус в строку, затем
                                            // идём дальше по строке, пока числовые значения не закончатся.
         if(isdigit(s1[i])) {
@@ -34,4 +34,4 @@ int main() {
     cout << number;
 }
 
-// Written by Vladimir Dragun 16.09.2019, BSUIR
+// Written by Vladimir Dragun 16.09.2019
