@@ -1,13 +1,10 @@
 ﻿#include <iostream>
-#include <string>
 #include <fstream>
-#include <vector>
 #include <windows.h>
+#include <string>
+#include <vector>
+
 using namespace std;
-
-
-ifstream fin; //object for input
-ofstream fout;
 
 struct Worker {
 	string name;
@@ -16,117 +13,225 @@ struct Worker {
 	float hourRate;
 	float salary;
 
-	void Print_info() {
-		cout << "\nFIO      | Tab. nomer | Hours | Chas. tarif | Zar. plata \n" <<
-			this->name << '\t' << this->id << '\t' << this->hours << '\t' << '\t' << this->hourRate << '\t' <<
-			this->salary << '\n';
-	}
-
-	Worker(string name = "NULL", unsigned int id = 0, int hours = 0, float hourRate = 0.0, float salary = 0.0) {
-		this->name = name;
-		this->id = id;
-		this->hours = hours;
-		this->hourRate = hourRate;
-		if (hours > 144.0)  // hours under 144 get payed in twice rate
-			salary = 144.0 * hourRate + (hours - 144.0) * hourRate * 2;
-		else
-			this->salary = hourRate * hourRate;
-	}
-
-	~Worker() { }; // default destructor
+	Worker() {};
+	~Worker() {};
 };
 
-void printAllInfo(); // function prototypes
-void saveAllInfo();
-void loadAllInfo();
-Worker newWorker();
+ofstream fout;
 
-  vector <Worker> workers; // vector for storing all data
+void print(vector <Worker>&);
+void bblSort(vector <Worker>&);
+void qckSort(vector <Worker>&, int, int);
+void srch(vector <Worker>&, double);
+void binSrch(vector <Worker>&, double);
 
-int main() {
-	while (true) {
 
-		loadAllInfo();
-		int mode;
-		cout << "Viberite rezhim raboti: 1) Sozdanie zapisi novogo rabotnika, \n 2) Prosmotr vseh dannih, \n"
-			" \n 3) Zarabotnaya plata vseh sotrudnikov \n 4) Vihod . . . " << "5) Ochistit' bazu dannih" << endl;
-		cin >> mode;
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	vector <Worker> workers;
+	char option;
 
-		switch (mode) {
-		case 1:
+	while (true)
+	{
+		cout << "------------------------------------------------------------------------------------------------------" << endl;
+		cout << "Фамилия и инициалы | Таб. номер | Часы | Тариф | Зар. плата" << endl;
+		cout << "------------------------------------------------------------------------------------------------------" << endl;
+		print(workers);
+		cout << "------------------------------------------------------------------------------------------------------" << endl;
+		cout << endl;
+		cout << "Введите 1, чтобы создать запись" << endl << "Введите 2, отсортировать работников по заработной плате"
+			<< endl << "Введите 3, чтобы найти работника по заработной плате" << endl << "Введите 4, чтобы выйти" << endl;
+		cin >> option;
+
+		switch (option)
 		{
-			Worker newworker = newWorker();
-			workers.push_back(newworker);
-			saveAllInfo();
+		case '1':
+		{
+			Worker buff;
+			cout << "Введите фамилию и инициалы: ";
+			SetConsoleCP(1251);
+			cin.ignore();
+			getline(cin, buff.name);
+			SetConsoleCP(866);
+			cout << "Введите табельный номер: ";
+			cin >> buff.id;
+			cout << "Введите количество часов за месяц: ";
+			cin >> buff.hours;
+			cout << "Введите часовой тариф: ";
+			cin >> buff.hourRate;
+			if (buff.hours > 144.0)  // hours under 144 get payed in a double rate
+				buff.salary = 144.0 * buff.hourRate + (buff.hours - 144.0) * buff.hourRate * 2;
+			else
+				buff.salary = buff.hourRate * buff.hours;
+			workers.push_back(buff);
 			break;
-		};
-		case 2:
+		}
+		case '2':
 		{
-			printAllInfo();
+			vector <Worker> sort;
+			sort = workers;
+			cout << "Результат сортировки прямым выбором:" << endl;
+			bblSort(sort); // bubble sort
+			print(sort);
+			sort = workers;
+			qckSort(sort, 0, sort.size() - 1); // quicksort
+			cout << "Результат QuckSort:" << endl;
+			print(sort);
+			// workers = sort; !!! uncomment, if needed
+			system("pause");
 			break;
-		};
-		case 3:
+		}
+		case '3':
 		{
+			vector <Worker> search;
+			double key = 0;
+			cout << "Введите заработную плату для поиска: ";
+			cin >> key;
+			cout << endl;
+			search = workers;
+			srch(search, key); // linear search
+			cout << "Результат прямого поиска:" << endl;
+			print(search);
+			search = workers;
+			qckSort(search, 0, search.size() - 1); // sorting the array for binary search
+			binSrch(search, key); // binary search
+			cout << "Результат двоичного поиска:" << endl;
+			print(search);
+			system("pause");
 			break;
-		};
-		case 4:
+		}
+		case '4':
 		{
-			cout << "Vihod . . .";
 			return 0;
-		};
-		case 5:
+		}
+		}
+
+		fout.open("workers.txt", ios_base::trunc);
+		for (size_t i = 0; i < workers.size(); i++)
 		{
-			fout.open("Database.txt", fstream::trunc); // cleaning the database
-			fout.close();
-			break;
-		};
+			fout << workers[i].name << " " << workers[i].id << " " << workers[i].hours << " " << workers[i].hourRate << " " <<
+				workers[i].salary << endl;
+		}
+		fout.close();
+		system("cls");
+	}
+	return 0;
+}
+
+void print(vector <Worker> &out)
+{
+	for (size_t i = 0; i < out.size(); i++) {
+		cout << out[i].name << "\t \t " << out[i].id << "\t " << out[i].hours << "  \t " << out[i].hourRate << " \t " <<
+			out[i].salary << endl;
+	}
+}
+
+void bblSort(vector <Worker> &srt)
+{
+	Worker buff;
+	for (size_t i = 1; i < srt.size(); i++)
+		for (int j = i; j > 0 && srt[j - 1].salary < srt[j].salary; j--) {
+			swap(srt[j - 1], srt[j]);
+		}
+}
+
+//void bblSort(vector <Worker>& srt) // reversed bubble sort (uncomment if needed)
+//{
+//	Worker buff;
+//	for (size_t i = 0; i < srt.size(); i++)
+//		for (int j = 0; j < srt.size() - i - 1; j++)
+//		{
+//			if(srt[j+1].salary < srt[j].salary)
+//				swap(srt[j + 1], srt[j]);
+//		}
+//}
+
+void qckSort(vector <Worker> &srt, int first, int last)
+{
+	int f = first;
+	int l = last;
+	Worker bear = srt[(f + l) / 2];
+
+	do {
+		while (srt[f].salary > bear.salary) 
+			f++;
+		while (srt[l].salary < bear.salary)
+			l--;
+		if (f <= l) {
+			swap(srt[f], srt[l]);
+			f++;
+			l--;
+		}
+	} while (f < l); 
+	if (first < l) qckSort(srt, first, l);
+	if (last > f) qckSort(srt, f, last);
+}
+
+//void qckSort(vector <Worker>& srt, int first, int last) { // reversed quickSort (uncomment if needed)
+//	int f = first;
+//	int l = last;
+//	Worker bear = srt[(f + l) / 2];
+//
+//	do {
+//		while (srt[f].salary < bear.salary)
+//			f++;
+//		while (srt[l].salary > bear.salary)
+//			l--;
+//		if (f <= l) {
+//			swap(srt[f], srt[l]);
+//			f++;
+//			l--;
+//		}
+//	} while (f < l);
+//	if (first < l)
+//		qckSort(srt, first, l);
+//	if (last > f)
+//		qckSort(srt, f, last);
+//}
+
+void srch(vector <Worker> &src, double key) {
+
+	for (size_t i = 0; i < src.size(); i++) {
+
+		if (src[i].salary != key) {
+			src.erase(src.begin() + i);
+			i--;
+		}
+	}
+}
+
+void binSrch(vector <Worker> &srch, double key) {
+	vector <Worker> buff;
+	int bear;
+	int first = 0;
+	int last = srch.size();
+	int n;
+
+	while (first < last) {
+		bear = (first + last) / 2;
+		if (srch[bear].salary == key) {
+			buff.push_back(srch[bear]);
+			for (int n = first; n < bear; n++) {
+				if (srch[n].salary == key) {
+					buff.push_back(srch[n]);
+				}
+			}
+			for (int n = bear + 1; n < last; n++) {
+				if (srch[n].salary == key) {
+					buff.push_back(srch[n]);
+				}
+			}
+		}
+
+		if (srch[bear].salary < key) {
+			last = bear;
+		}
+		else {
+			first = bear + 1;
 		}
 	}
 
-
-
-
-}
-
-void loadAllInfo() {
-	int i = 0;
-	Worker buffer;
-	fin.open("Database.txt");
-	while (fin.read((char*)&buffer, sizeof(Worker))) { // loading all info into array that we will work with
-		cout << "Loaded";
-		workers.push_back(buffer);
-		i++;
-	}
-	fin.close();
-}
-
-void printAllInfo() { // print all current info about students from array
-	for (int i = 0; i < workers.size(); i++) {
-		workers[i].Print_info();
-	}
-};
-
-void saveAllInfo() { // save all current info in array into database
-	fout.open("Database.txt", fstream::trunc);
-	for (int i = 0; i < workers.size(); i++) {
-		fout.write((char*)&workers[i], sizeof(Worker));
-	}
-	cout << "Workers loaded to database" << '\n';
-	fout.close();
-}
-
-Worker newWorker() {
-	string name;
-	int id;
-	float hours, hourRate;
-	cout << "Vvedite familiyu i initsiali rabotnika:" << endl;
-	cin >> name;
-	cout << "Vvedite tabelniy nomer:" << endl;
-	cin >> id;
-	cout << "Vvedite chasi za mesyats:" << endl;
-	cin >> hours;
-	cout << "Vvedite chasovoy tarif:" << endl;
-	cin >> hourRate;
-	Worker result = Worker(name, id, hours, hourRate);
-	return result;
+	srch.clear();
+	srch = buff;
 }

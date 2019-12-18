@@ -1,6 +1,4 @@
 ﻿  lab4.cpp
-C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(31,30): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(104,20): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(114,20): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(133,35): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(64,41): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(209,6): warning C4101: n: неиспользованная локальная переменная
   lab4.vcxproj -> C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\Debug\lab4.exe

@@ -1,0 +1,5 @@
+﻿  lab4.cpp
+C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(31,30): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\lab4\lab4.cpp(135,35): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+lab4.obj : error LNK2019: ёё√ыър эр эхЁрчЁх°хээ√щ тэх°эшщ ёшьтюы "public: __cdecl Worker::~Worker(void)" (??1Worker@@QEAA@XZ) т ЇєэъЎшш "public: void * __cdecl Worker::`scalar deleting destructor'(unsigned int)" (??_GWorker@@QEAAPEAXI@Z)
+C:\Users\bobaw\Desktop\gitn\labsBSUIR\sem_2\lab4\x64\Debug\lab4.exe : fatal error LNK1120: эхЁрчЁх°хээ√ї тэх°эшї ¤ыхьхэЄют: 1
